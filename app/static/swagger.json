@@ -1,0 +1,465 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "API of service that provides authentication by photo of a user",
+        "version": "0.1.0",
+        "title": "Authentication service",
+        "contact": {
+            "name": "GitHub",
+            "url": "https://github.com/SkymeFactor/face_authentication_service"
+        },
+        "license": {
+            "name": "GPL License",
+            "url": "http://www.gnu.org/licenses/gpl.html"
+        }
+    },
+    "schemes": [
+        "http"
+    ],
+    "basePath": "/api/v1.0",
+    "tags": [{
+            "name": "Token",
+            "description": "OAuth2.0 endpoints to work with tokens"
+        },
+        {
+            "name": "User Profile",
+            "description": "The following endpoints are working with user profiles. REQUIRES: Token"
+        }
+    ],
+    "paths": {
+        "/oauth/authorize": {
+            "post": {
+                "tags": [
+                    "Token"
+                ],
+                "summary": "Generate temporary code and send it to REDIRECT_URI",
+                "parameters": [{
+                        "in": "query",
+                        "name": "client_id",
+                        "description": "Client application id which was given by resource owner",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "redirect_uri",
+                        "description": "URI to send the temporary code to",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "http://192.168.0.13:8000/authorizer/code"
+                        }
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "401": {
+                        "description": "Unauthorizen"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    },
+                    "500": {
+                        "description": "Internal server error"
+                    }
+                },
+                "deprecated": false
+            }
+        },
+        "/oauth/access_token": {
+            "get": {
+                "tags": [
+                    "Token"
+                ],
+                "summary": "Request a new token by passing credentials to Authorization header",
+                "parameters": [{
+                        "in": "query",
+                        "name": "client_id",
+                        "description": "Client application id which was given by resource owner",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "1"
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "client_secret",
+                        "description": "Client application secret which was given by resource owner",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "0ac571b77820e75a93ff5c8e5d7b8df096421f31"
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "redirect_uri",
+                        "description": "URI to send the temporary code to",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "http://192.168.0.13:8000/authorizer/token"
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "code",
+                        "description": "Code handled by REDIRECT_URI",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "401": {
+                        "description": "Unauthorizen"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    },
+                    "500": {
+                        "description": "Internal server error"
+                    }
+                },
+                "deprecated": false
+            }
+        },
+        "/oauth/expire_token/{token}": {
+            "delete": {
+                "tags": [
+                    "Token"
+                ],
+                "summary": "Forcefully expire your token before it's end of life",
+                "operationId": "segmentationUsingPost",
+                "parameters": [{
+                    "in": "path",
+                    "name": "image",
+                    "description": "Generated image name",
+                    "required": true,
+                    "schema": {
+                        "type": "string",
+                        "example": "test"
+                    }
+                }],
+                "produces": [
+                    "multipart/form-data"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "401": {
+                        "description": "Unauthorizen"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    },
+                    "500": {
+                        "description": "Internal server error"
+                    }
+                },
+                "deprecated": false
+            }
+        },
+        "/oauth/refresh_token/{token}": {
+            "put": {
+                "tags": [
+                    "Token"
+                ],
+                "summary": "Refresh token by sending 'refresh_token' to this endpoint",
+                "operationId": "segmentationUsingPost",
+                "parameters": [{
+                    "in": "path",
+                    "name": "image",
+                    "description": "Generated image name",
+                    "required": true,
+                    "schema": {
+                        "type": "string",
+                        "example": "test"
+                    }
+                }],
+                "produces": [
+                    "multipart/form-data"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "401": {
+                        "description": "Unauthorizen"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    },
+                    "500": {
+                        "description": "Internal server error"
+                    }
+                },
+                "deprecated": false
+            }
+        },
+        "/user_register/{username}": {
+            "post": {
+                "tags": [
+                    "User Profile"
+                ],
+                "summary": "Create a new user profile with given name and photo",
+                "operationId": "segmentationUsingPost",
+                "parameters": [{
+                    "in": "body",
+                    "name": "body",
+                    "description": "Link to JPEG image",
+                    "required": true,
+                    "schema": {
+                        "$ref": "#/definitions/Request"
+                    }
+                }],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "401": {
+                        "description": "Unauthorizen"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    },
+                    "500": {
+                        "description": "Internal server error"
+                    }
+                },
+                "deprecated": false
+            }
+        },
+        "/user_auth/{username}": {
+            "get": {
+                "tags": [
+                    "User Profile"
+                ],
+                "summary": "Requests user's authentication by sending a photo to this endpoint",
+                "operationId": "segmentationUsingPost",
+                "parameters": [{
+                    "in": "path",
+                    "name": "image",
+                    "description": "Generated image name",
+                    "required": true,
+                    "schema": {
+                        "type": "string",
+                        "example": "test"
+                    }
+                }],
+                "produces": [
+                    "multipart/form-data"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "401": {
+                        "description": "Unauthorizen"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    },
+                    "500": {
+                        "description": "Internal server error"
+                    }
+                },
+                "deprecated": false
+            }
+        },
+        "/user_update/{username}": {
+            "put": {
+                "tags": [
+                    "User Profile"
+                ],
+                "summary": "Update user profile with given username",
+                "operationId": "segmentationUsingPost",
+                "parameters": [{
+                    "in": "path",
+                    "name": "image",
+                    "description": "Generated image name",
+                    "required": true,
+                    "schema": {
+                        "type": "string",
+                        "example": "test"
+                    }
+                }],
+                "produces": [
+                    "multipart/form-data"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "401": {
+                        "description": "Unauthorizen"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    },
+                    "500": {
+                        "description": "Internal server error"
+                    }
+                },
+                "deprecated": false
+            }
+        },
+        "/user_delete/{username}": {
+            "delete": {
+                "tags": [
+                    "User Profile"
+                ],
+                "summary": "Completeley remove certain user from database",
+                "operationId": "segmentationUsingPost",
+                "parameters": [{
+                    "in": "path",
+                    "name": "image",
+                    "description": "Generated image name",
+                    "required": true,
+                    "schema": {
+                        "type": "string",
+                        "example": "test"
+                    }
+                }],
+                "produces": [
+                    "multipart/form-data"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "401": {
+                        "description": "Unauthorizen"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    },
+                    "500": {
+                        "description": "Internal server error"
+                    }
+                },
+                "deprecated": false
+            }
+        }
+    },
+    "definitions": {
+        "POST_access_token": {
+            "type": "object",
+            "properties": {
+                "access_token": {
+                    "type": "string",
+                    "example": "5c59499aa17f58f99d85bcb66007b4cd9900a1bd"
+                },
+                "refresh_token": {
+                    "type": "string",
+                    "example": "7eee536ecf8c4d2bb71f44526ff57863c64847ae"
+                },
+                "expires_in": {
+                    "type": "integer",
+                    "example": 3600
+                },
+                "user_id": {
+                    "type": "integer",
+                    "example": 1
+                }
+            },
+            "title": "POST of access_token to redirect uri"
+        },
+        "Response": {
+            "type": "object",
+            "properties": {
+                "mask": {
+                    "type": "string"
+                },
+                "segmentation": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "integer"
+                }
+            },
+            "title": "User Profile Response"
+        }
+    },
+    "externalDocs": {
+        "description": "Find out more about Swagger",
+        "url": "http://swagger.io"
+    }
+}

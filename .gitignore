@@ -1,0 +1,12 @@
+# common
+.*
+!.gitignore
+
+# folders
+__pycache__
+venv
+samples
+
+# file types
+*.pyc
+*.ipynb
