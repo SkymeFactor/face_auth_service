@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Redirect API catcher</title>
+    <link rel="icon" type="image/png" href="{{ fav32 }}" sizes="32x32">
+    <link rel="icon" type="image/png" href="{{ fav16 }}" sizes="16x16">
+</head>
+
+<body>
+    <p><b>Code:</b> <br>
+        <input class="js-code_field" type="text" value="{{ code }}" size="45" readonly>
+        <button class="js-code_copy_btn">Copy code</button>
+    </p>
+    <p><b>Access_token:</b> <br>
+        <input class="js-token_field" type="text" value="{{ access_token }}" size="45" readonly>
+        <button class="js-token_copy_btn">Copy access_token</button>
+    </p>
+    <script>
+        var copyCodeBtn = document.querySelector('.js-code_copy_btn');
+        var copyTokenBtn = document.querySelector('.js-token_copy_btn')
+
+        copyCodeBtn.addEventListener('click', function(event) {
+            var copyTextarea = document.querySelector('.js-code_field');
+            copyTextarea.focus();
+            copyTextarea.select();
+
+            try {
+                var successful = document.execCommand('copy');
+                var msg = successful ? 'successful' : 'unsuccessful';
+                console.log('Copying text command was ' + msg);
+            } catch (err) {
+                console.log('Unable to copy');
+            }
+        });
+
+        copyTokenBtn.addEventListener('click', function(event) {
+            var copyTextarea = document.querySelector('.js-token_field');
+            copyTextarea.focus();
+            copyTextarea.select();
+
+            try {
+                var successful = document.execCommand('copy');
+                var msg = successful ? 'successful' : 'unsuccessful';
+                console.log('Copying text command was ' + msg);
+            } catch (err) {
+                console.log('Unable to copy');
+            }
+        });
+    </script>
+</body>
+
+</html>
