@@ -6,16 +6,34 @@
     <title>Redirect API catcher</title>
     <link rel="icon" type="image/png" href="{{ fav32 }}" sizes="32x32">
     <link rel="icon" type="image/png" href="{{ fav16 }}" sizes="16x16">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
+    <script>
+        var interval = null
+        $(document).ready(function() {
+            // auto refresh values after 2 second
+            interval = setInterval('refreshData()', 2000);
+        });
+
+        function refreshData() {
+            $.get("http://192.168.0.13:8000/get_values", function(data) {
+                    document.querySelector('.js-code_field').value = data.code;
+                    document.querySelector('.js-token_field').value = data.access_token
+                }, 'json')
+                .fail(err => {
+                    clearInterval(interval);
+                })
+        }
+    </script>
 </head>
 
 <body>
     <p><b>Code:</b> <br>
-        <input class="js-code_field" type="text" value="{{ code }}" size="45" readonly>
+        <input class="js-code_field" type="text" value="" size="45" readonly>
         <button class="js-code_copy_btn">Copy code</button>
     </p>
-    <p><b>Access_token:</b> <br>
-        <input class="js-token_field" type="text" value="{{ access_token }}" size="45" readonly>
-        <button class="js-token_copy_btn">Copy access_token</button>
+    <p><b>Access token:</b> <br>
+        <input class="js-token_field" type="text" value="" size="45" readonly>
+        <button class="js-token_copy_btn">Copy access token</button>
     </p>
     <script>
         var copyCodeBtn = document.querySelector('.js-code_copy_btn');

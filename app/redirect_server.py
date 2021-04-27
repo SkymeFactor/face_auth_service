@@ -11,8 +11,6 @@ def draw_gui():
     
     return flask.render_template(
         template_name_or_list='redirect_gui.html',
-        code=code,
-        access_token=access_token,
         fav32=f'{url_prefix}/static/img/favicon-32x32.png',
         fav16=f'{url_prefix}/static/img/favicon-16x16.png'
     )
@@ -32,6 +30,11 @@ def redirect_token_handler():
     print(args)
     access_token = args['access_token']
     return ""
+
+@app.route('/get_values', methods=['GET'])
+def return_values():
+    global code, access_token
+    return flask.jsonify({"code": code, "access_token": access_token})
 
 if __name__ == "__main__":
     app.run(debug=False, host="192.168.0.13", port=8000)
