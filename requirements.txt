@@ -1,2 +1,4 @@
 Flask
 pymongo
+celery[mongodb]
+opencv-python
