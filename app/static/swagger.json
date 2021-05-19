@@ -14,11 +14,12 @@
         }
     },
     "schemes": [
-        "http"
+        "http",
+        "https"
     ],
     "basePath": "/api/v1.0",
     "tags": [{
-            "name": "Token",
+            "name": "Acquiring Tokens",
             "description": "OAuth2.0 endpoints to work with tokens"
         },
         {
@@ -28,9 +29,9 @@
     ],
     "paths": {
         "/oauth/authorize": {
-            "post": {
+            "get": {
                 "tags": [
-                    "Token"
+                    "Acquiring Tokens"
                 ],
                 "summary": "Generate temporary code and send it to REDIRECT_URI",
                 "parameters": [{
@@ -83,7 +84,7 @@
         "/oauth/access_token": {
             "get": {
                 "tags": [
-                    "Token"
+                    "Acquiring Tokens"
                 ],
                 "summary": "Request a new token by passing credentials to Authorization header",
                 "parameters": [{
@@ -155,25 +156,23 @@
                 "deprecated": false
             }
         },
-        "/oauth/expire_token/{token}": {
+        "/oauth/revoke_token/{token}": {
             "delete": {
                 "tags": [
-                    "Token"
+                    "Acquiring Tokens"
                 ],
-                "summary": "Forcefully expire your token before it's end of life",
-                "operationId": "segmentationUsingPost",
+                "summary": "Forcefully revokes your token even before it's end of life",
                 "parameters": [{
                     "in": "path",
-                    "name": "image",
+                    "name": "token",
                     "description": "Generated image name",
                     "required": true,
                     "schema": {
-                        "type": "string",
-                        "example": "test"
+                        "type": "string"
                     }
                 }],
                 "produces": [
-                    "multipart/form-data"
+                    "application/json"
                 ],
                 "responses": {
                     "200": {
@@ -195,28 +194,57 @@
                         "description": "Internal server error"
                     }
                 },
-                "deprecated": false
+                "deprecated": true
             }
         },
         "/oauth/refresh_token/{token}": {
             "put": {
                 "tags": [
-                    "Token"
+                    "Acquiring Tokens"
                 ],
                 "summary": "Refresh token by sending 'refresh_token' to this endpoint",
-                "operationId": "segmentationUsingPost",
                 "parameters": [{
-                    "in": "path",
-                    "name": "image",
-                    "description": "Generated image name",
-                    "required": true,
-                    "schema": {
-                        "type": "string",
-                        "example": "test"
+                        "in": "query",
+                        "name": "client_id",
+                        "description": "Client application id which was given by resource owner",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "1"
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "client_secret",
+                        "description": "Client application secret which was given by resource owner",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "0ac571b77820e75a93ff5c8e5d7b8df096421f31"
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "redirect_uri",
+                        "description": "URI to send the temporary code to",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "http://192.168.0.13:8000/authorizer/token"
+                        }
+                    },
+                    {
+                        "in": "path",
+                        "name": "token",
+                        "description": "Refresh token that you've got earlier",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
                     }
-                }],
+                ],
                 "produces": [
-                    "multipart/form-data"
+                    "application/json"
                 ],
                 "responses": {
                     "200": {
@@ -247,18 +275,97 @@
                     "User Profile"
                 ],
                 "summary": "Create a new user profile with given name and photo",
-                "operationId": "segmentationUsingPost",
                 "parameters": [{
-                    "in": "body",
-                    "name": "body",
-                    "description": "Link to JPEG image",
-                    "required": true,
-                    "schema": {
-                        "$ref": "#/definitions/Request"
+                        "in": "path",
+                        "name": "username",
+                        "description": "User's profile name to keep (must be unique)",
+                        "required": true
+                    },
+                    {
+                        "in": "header",
+                        "name": "Authorization",
+                        "description": "Access token as bearer parameter",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "Bearer "
+                        }
+                    },
+                    {
+                        "in": "formData",
+                        "type": "file",
+                        "name": "image",
+                        "description": "Link to JPEG image",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/Request"
+                        }
                     }
-                }],
+                ],
                 "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
                     "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "401": {
+                        "description": "Unauthorizen"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    },
+                    "500": {
+                        "description": "Internal server error"
+                    }
+                },
+                "deprecated": false
+            }
+        },
+        "/user_auth/{username}": {
+            "post": {
+                "tags": [
+                    "User Profile"
+                ],
+                "summary": "Requests user's authentication by sending a photo to this endpoint",
+                "parameters": [{
+                        "in": "path",
+                        "name": "username",
+                        "description": "Existing user's profile name",
+                        "required": true
+                    },
+                    {
+                        "in": "header",
+                        "name": "Authorization",
+                        "description": "Access token as bearer parameter",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "Bearer "
+                        }
+                    },
+                    {
+                        "in": "formData",
+                        "type": "file",
+                        "name": "image",
+                        "description": "Link to JPEG image",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/Request"
+                        }
+                    }
+                ],
+                "consumes": [
+                    "multipart/form-data"
                 ],
                 "produces": [
                     "application/json"
@@ -289,68 +396,54 @@
                 "deprecated": false
             }
         },
-        "/user_auth/{username}": {
-            "get": {
-                "tags": [
-                    "User Profile"
-                ],
-                "summary": "Requests user's authentication by sending a photo to this endpoint",
-                "operationId": "segmentationUsingPost",
-                "parameters": [{
-                    "in": "path",
-                    "name": "image",
-                    "description": "Generated image name",
-                    "required": true,
-                    "schema": {
-                        "type": "string",
-                        "example": "test"
-                    }
-                }],
-                "produces": [
-                    "multipart/form-data"
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK"
-                    },
-                    "400": {
-                        "description": "Bad Request"
-                    },
-                    "401": {
-                        "description": "Unauthorizen"
-                    },
-                    "403": {
-                        "description": "Forbidden"
-                    },
-                    "404": {
-                        "description": "Not Found"
-                    },
-                    "500": {
-                        "description": "Internal server error"
-                    }
-                },
-                "deprecated": false
-            }
-        },
         "/user_update/{username}": {
             "put": {
                 "tags": [
                     "User Profile"
                 ],
-                "summary": "Update user profile with given username",
-                "operationId": "segmentationUsingPost",
+                "summary": "Update user's profile with given username",
                 "parameters": [{
-                    "in": "path",
-                    "name": "image",
-                    "description": "Generated image name",
-                    "required": true,
-                    "schema": {
-                        "type": "string",
-                        "example": "test"
+                        "in": "path",
+                        "name": "username",
+                        "description": "Existing user's profile name",
+                        "required": true
+                    },
+                    {
+                        "in": "header",
+                        "name": "Authorization",
+                        "description": "Access token as bearer parameter",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "Bearer "
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "new_username",
+                        "description": "New username for your profile",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "example": "Anonymous"
+                        }
+                    },
+                    {
+                        "in": "formData",
+                        "type": "file",
+                        "name": "image",
+                        "description": "Link to JPEG image",
+                        "required": false,
+                        "schema": {
+                            "$ref": "#/definitions/Request"
+                        }
                     }
-                }],
-                "produces": [
+                ],
+                "consumes": [
                     "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
                 ],
                 "responses": {
                     "200": {
@@ -381,19 +474,29 @@
                     "User Profile"
                 ],
                 "summary": "Completeley remove certain user from database",
-                "operationId": "segmentationUsingPost",
                 "parameters": [{
-                    "in": "path",
-                    "name": "image",
-                    "description": "Generated image name",
-                    "required": true,
-                    "schema": {
-                        "type": "string",
-                        "example": "test"
+                        "in": "path",
+                        "name": "username",
+                        "description": "User's profile name",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "Sergei"
+                        }
+                    },
+                    {
+                        "in": "header",
+                        "name": "Authorization",
+                        "description": "Access token as bearer parameter",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "Bearer "
+                        }
                     }
-                }],
+                ],
                 "produces": [
-                    "multipart/form-data"
+                    "application/json"
                 ],
                 "responses": {
                     "200": {
@@ -456,7 +559,8 @@
                 }
             },
             "title": "User Profile Response"
-        }
+        },
+        "Request": {}
     },
     "externalDocs": {
         "description": "Find out more about Swagger",
