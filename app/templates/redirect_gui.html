@@ -18,6 +18,7 @@
             $.get("http://192.168.0.13:8000/get_values", function(data) {
                     document.querySelector('.js-code_field').value = data.code;
                     document.querySelector('.js-token_field').value = data.access_token
+                    document.querySelector('.js-refresh_token_field').value = data.refresh_token
                 }, 'json')
                 .fail(err => {
                     clearInterval(interval);
@@ -35,9 +36,14 @@
         <input class="js-token_field" type="text" value="" size="45" readonly>
         <button class="js-token_copy_btn">Copy access token</button>
     </p>
+    <p><b>Refresh token:</b> <br>
+        <input class="js-refresh_token_field" type="text" value="" size="45" readonly>
+        <button class="js-refresh_token_copy_btn">Copy refresh token</button>
+    </p>
     <script>
         var copyCodeBtn = document.querySelector('.js-code_copy_btn');
-        var copyTokenBtn = document.querySelector('.js-token_copy_btn')
+        var copyTokenBtn = document.querySelector('.js-token_copy_btn');
+        var copyRefreshTokenBtn = document.querySelector('.js-refresh_token_copy_btn');
 
         copyCodeBtn.addEventListener('click', function(event) {
             var copyTextarea = document.querySelector('.js-code_field');
@@ -55,6 +61,20 @@
 
         copyTokenBtn.addEventListener('click', function(event) {
             var copyTextarea = document.querySelector('.js-token_field');
+            copyTextarea.focus();
+            copyTextarea.select();
+
+            try {
+                var successful = document.execCommand('copy');
+                var msg = successful ? 'successful' : 'unsuccessful';
+                console.log('Copying text command was ' + msg);
+            } catch (err) {
+                console.log('Unable to copy');
+            }
+        });
+
+        copyRefreshTokenBtn.addEventListener('click', function(event) {
+            var copyTextarea = document.querySelector('.js-refresh_token_field');
             copyTextarea.focus();
             copyTextarea.select();
 

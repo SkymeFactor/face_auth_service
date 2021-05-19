@@ -4,6 +4,7 @@ app = flask.Flask('redirect_server')
 
 code = ''
 access_token = ''
+refresh_token = ''
 
 @app.route('/', methods=['GET'])
 def draw_gui():
@@ -25,16 +26,17 @@ def redirect_code_handler():
 
 @app.route('/authorizer/token', methods=['POST'])
 def redirect_token_handler():
-    global access_token
+    global access_token, refresh_token
     args = flask.request.get_json()
     print(args)
     access_token = args['access_token']
+    refresh_token = args['refresh_token']
     return ""
 
 @app.route('/get_values', methods=['GET'])
 def return_values():
-    global code, access_token
-    return flask.jsonify({"code": code, "access_token": access_token})
+    global code, access_token, refresh_token
+    return flask.jsonify({"code": code, "access_token": access_token, "refresh_token": refresh_token})
 
 if __name__ == "__main__":
     app.run(debug=False, host="192.168.0.13", port=8000)
