@@ -2,7 +2,18 @@
     "debug": true,
     "flask_address": "0.0.0.0",
     "flask_port": 5000,
-    "mongo_address": "localhost",
-    "mongo_dbname": "FaceprintsDB",
-    "host_address": "192.168.0.13:5000"
+    "flask_protocol": "https",
+    "mongo_address": "mongodb://172.17.0.2:27017",
+    "celery_backend": "mongodb://172.17.0.2:27017/temp",
+    "celery_broker": "mongodb://172.17.0.2:27017/temp",
+    "dbname": "AuthSessionDB",
+    "users_collection": "users",
+    "clients_collection": "clients",
+    "codes_collection": "codes",
+    "at_collection": "access_tokens",
+    "rt_collection": "refresh_tokens",
+    "host_address": "192.168.0.13:5000",
+    "code_expire_time": 600,
+    "access_token_expire_time": 3600,
+    "refresh_token_expire_time": 172800
 }
