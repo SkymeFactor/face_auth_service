@@ -2,3 +2,4 @@ Flask
 pymongo
 celery[mongodb]
 opencv-python
+click<8.0,>=7.0
